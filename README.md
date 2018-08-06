@@ -29,4 +29,4 @@ mkdir data-retrieved-$today
 
 ## License
 
-CC0 for the code.
+CC0 for the code and readme.

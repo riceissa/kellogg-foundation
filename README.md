@@ -24,7 +24,7 @@ mkdir data-retrieved-$today
 ./scrape.py data-retrieved-$today
 
 # Use the HTML files to generate the SQL file containing insert statements
-./proc data-retrieved-$today > out-$today.sql
+./proc.py data-retrieved-$today > out-$today.sql
 ```
 
 ## License

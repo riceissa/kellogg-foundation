@@ -64,12 +64,14 @@ def soup_to_grants(soup, page, last_page):
             except ValueError:
                 donation_date = datetime.datetime.strptime(start_date, "%B %d, %Y")
             donation_date = donation_date.strftime("%Y-%m-%d")
+            donation_date_precision = "day"
         else:
             donation_date = ""
+            donation_date_precision = ""
         amount = date_amount[dollar_loc:].strip().replace("$", "").replace(",", "")
 
         try:
-            location = result.find("div", {"class": "geo-focus"}).text.strip()
+            location = "|".join(map(lambda x: x.text.strip(), result.find_all("div", {"class": "geo-focus"})))
         except AttributeError:
             location = ""
 
@@ -78,6 +80,7 @@ def soup_to_grants(soup, page, last_page):
                 "url": url,
                 "purpose": purpose,
                 "donation_date": donation_date,
+                "donation_date_precision": donation_date_precision,
                 "amount": amount,
                 "location": location,
                 }
@@ -94,8 +97,8 @@ def print_sql(grants_generator):
             mysql_quote(grant["grantee"]),  # donee
             str(grant["amount"]),  # amount
             mysql_quote(grant["donation_date"]),  # donation_date
-            mysql_quote("day"),  # donation_date_precision
-            mysql_quote("donation log"),  # donation_date_basis
+            mysql_quote(grant["donation_date_precision"]),  # donation_date_precision
+            mysql_quote("donation log" if grant["donation_date"] else ""),  # donation_date_basis
             mysql_quote(""),  # cause_area
             mysql_quote(grant["url"]),  # url
             mysql_quote(""),  # donor_cause_area_url

@@ -48,6 +48,7 @@ PERU_REGIONS = ["La Libertad", "Puno"]
 CHILE_REGIONS = ["Región Metropolitana de Santiago"]
 INDIA_STATES = ["Andhra Pradesh"]
 SWAZILAND_REGIONS = ["Hhohho", "Lubombo", "Manzini", "Shiselweni"]
+MOZAMBIQUE_PROVINCES = ["Manica", "Sofala"]
 
 SOUTH_AFRICA_PROVINCES = ["Gauteng", "Western Cape", "Kwazulu-Natal", "Free State",
                           "Mpumalanga"]
@@ -56,6 +57,8 @@ FRANCE_DEPARTMENTS = ["Val-de-Marne"]
 
 COSTA_RICA_PROVINCES = ["Limón"]
 CHINA_PROVINCES = ["Sichuan"]
+NEW_ZEALAND_REGIONS = ["Canterbury"]
+UNITED_KINGDOM_COUNTIES = ["Buckinghamshire"]
 
 ZIMBABWE_PROVINCES = ["Manicaland", "Harare"]
 
@@ -72,6 +75,7 @@ CITIES = {
         "São Paulo": "Brazil",
         "Paris": "France",
         "Zürich (de)": "Switzerland",
+        "Maseru": "Lesotho",
         }
 
 HAITI_DEPARTMENTS = ["Artibonite", "Centre", "Grand'Anse", "Nippes", "Nord",
@@ -107,7 +111,17 @@ def get_location(locations):
             pass
         elif location in CHILE_REGIONS:
             pass
+        elif location in INDIA_STATES:
+            pass
         elif location in CHINA_PROVINCES:
+            pass
+        elif location in MOZAMBIQUE_PROVINCES:
+            pass
+        elif location in NEW_ZEALAND_REGIONS:
+            pass
+        elif location in UNITED_KINGDOM_COUNTIES:
+            pass
+        elif location in SWAZILAND_REGIONS:
             pass
         elif location in CITIES:
             pass
@@ -145,7 +159,7 @@ def main():
     # save) this will catch it; (2) the ordering from glob is not in numerical
     # order.
     for page in range(1, last_page + 1):
-        print(f"Doing page {page}", file=sys.stderr)
+        # print(f"Doing page {page}", file=sys.stderr)
         with open(sys.argv[1] + f"/page-{page}.html", "r") as f:
             soup = BeautifulSoup(f, "lxml")
             print_sql(soup_to_grants(soup, page, last_page))

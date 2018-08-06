@@ -6,6 +6,120 @@ import datetime
 from bs4 import BeautifulSoup
 
 
+US_STATES = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+             'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia',
+             'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+             'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+             'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+             'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+             'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+             'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah',
+             'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin',
+             'Wyoming']
+
+COUNTRIES = ['USA', 'U.S.', 'Mexico', 'Haiti', 'Honduras', 'Virgin Islands', 'Grenada',
+             'Puerto Rico', 'Brazil', 'Argentina', 'Zimbabwe', 'Guatemala',
+             'Mozambique', 'Lesotho', 'South Africa', 'Botswana', 'Bolivia',
+             'Peru', 'Swaziland', 'Chile', 'Colombia', 'Nicaragua', 'Ecuador',
+             'Uruguay', 'Malawi', 'Panama', 'El Salvador', 'Costa Rica',
+             'Belize', 'Canada', 'Venezuela', 'Jamaica', 'Paraguay',
+             'Saint Vincent and the Grenadines', 'Saint Kitts and Nevis',
+             'Saint Lucia', 'Cameroon', 'Kenya', 'Antigua and Barbuda',
+             'New Zealand', 'United Kingdom', 'Trinidad and Tobago',
+             'Dominica', 'Barbados', 'Montserrat']
+
+MEXICO_STATES = ["Aguascalientes", "Baja California", "Baja California Sur",
+                 "Campeche", "Chiapas", "Mexico City", "Chihuahua", "Coahuila de Zaragoza",
+                 "Colima", "Durango", "Guanajuato", "Guerrero", "Hidalgo", "Jalisco",
+                 "México", "Michoacán de Ocampo", "Morelos", "Nayarit", "Nuevo León", "Oaxaca",
+                 "Puebla", "Querétaro", "Quintana Roo", "San Luis Potosí", "Sinaloa",
+                 "Sonora", "Tabasco", "Tamaulipas", "Tlaxcala", "Veracruz de Ignacio de la Llave",
+                 "Ignacio de la Llave", "Yucatán", "Zacatecas", "Distrito Federal"]
+
+BRAZIL_STATES = ["Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará",
+                 "Distrito Federal", "Espírito Santo", "Goiás", "Maranhão",
+                 "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará",
+                 "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro",
+                 "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia",
+                 "Roraima", "Santa Catarina", "São Paulo", "Sergipe",
+                 "Tocantins"]
+
+PERU_REGIONS = ["La Libertad", "Puno"]
+CHILE_REGIONS = ["Región Metropolitana de Santiago"]
+INDIA_STATES = ["Andhra Pradesh"]
+SWAZILAND_REGIONS = ["Hhohho", "Lubombo", "Manzini", "Shiselweni"]
+
+SOUTH_AFRICA_PROVINCES = ["Gauteng", "Western Cape", "Kwazulu-Natal", "Free State",
+                          "Mpumalanga"]
+
+FRANCE_DEPARTMENTS = ["Val-de-Marne"]
+
+COSTA_RICA_PROVINCES = ["Limón"]
+CHINA_PROVINCES = ["Sichuan"]
+
+ZIMBABWE_PROVINCES = ["Manicaland", "Harare"]
+
+EL_SALVADOR_DEPARTMENTS = ["Ahuachapán", "Cabañas", "Chalatenango", "Cuscatlán",
+                           "La Libertad", "La Paz", "La Unión", "Morazán",
+                           "San Miguel", "San Salvador", "San Vicente",
+                           "Santa Ana", "Sonsonate", "Usulután"]
+
+HONDURAS_DEPARTMENTS = ["Atlántida"]
+
+CITIES = {
+        "Cuneo": "Italy",
+        "Bergamo": "Italy",
+        "São Paulo": "Brazil",
+        "Paris": "France",
+        "Zürich (de)": "Switzerland",
+        }
+
+HAITI_DEPARTMENTS = ["Artibonite", "Centre", "Grand'Anse", "Nippes", "Nord",
+                     "Nord Est", "Nord Ouest", "Ouest", "Sud Est", "Sud"]
+
+def get_location(locations):
+    for location in locations:
+        if location in US_STATES:
+            pass
+        elif location.endswith(" Wide") and location[:-len(" Wide")] in COUNTRIES:
+            pass
+        elif location in COUNTRIES:
+            pass
+        elif location in MEXICO_STATES:
+            pass
+        elif location in HAITI_DEPARTMENTS:
+            pass
+        elif location in FRANCE_DEPARTMENTS:
+            pass
+        elif location in SOUTH_AFRICA_PROVINCES:
+            pass
+        elif location in PERU_REGIONS:
+            pass
+        elif location in EL_SALVADOR_DEPARTMENTS:
+            pass
+        elif location in BRAZIL_STATES:
+            pass
+        elif location in COSTA_RICA_PROVINCES:
+            pass
+        elif location in ZIMBABWE_PROVINCES:
+            pass
+        elif location in HONDURAS_DEPARTMENTS:
+            pass
+        elif location in CHILE_REGIONS:
+            pass
+        elif location in CHINA_PROVINCES:
+            pass
+        elif location in CITIES:
+            pass
+        elif location == "American Indian/Alaska Tribal Nation":
+            pass
+        elif location == "DR Wide":
+            # Dominican Republic, e.g. https://www.wkkf.org/grants/grant/2009/01/improving-and-consolidating-a-rural-development-experience-3010662
+            pass
+        else:
+            print(location, file=sys.stderr)
+    return "blah"
+
 def mysql_quote(x):
     """Quote the string x using MySQL quoting rules. If x is the empty string,
     return "NULL". Probably not safe against maliciously formed strings, but
@@ -77,9 +191,9 @@ def soup_to_grants(soup, page, last_page):
         amount = date_amount[dollar_loc:].strip().replace("$", "").replace(",", "")
 
         try:
-            location = "|".join(map(lambda x: x.text.strip(), result.find_all("div", {"class": "geo-focus"})))
+            locations = list(map(lambda x: x.text.strip(), result.find_all("div", {"class": "geo-focus"})))
         except AttributeError:
-            location = ""
+            locations = []
 
         yield {
                 "grantee": grantee,
@@ -89,7 +203,7 @@ def soup_to_grants(soup, page, last_page):
                 "donation_date_precision": donation_date_precision,
                 "grant_range": grant_range,
                 "amount": amount,
-                "location": location,
+                "locations": locations,
                 }
 
 
@@ -100,6 +214,7 @@ def print_sql(grants_generator):
         if first:
             print(insert_stmt)
         notes = ["Purpose: " + grant["purpose"]]
+        get_location(grant["locations"])  # TODO remove later
         if grant["grant_range"]:
             notes.append("Grant period: " + grant["grant_range"])
         print(("    " if first else "    ,") + "(" + ",".join([
@@ -113,7 +228,7 @@ def print_sql(grants_generator):
             mysql_quote(grant["url"]),  # url
             mysql_quote(""),  # donor_cause_area_url
             mysql_quote("; ".join(notes)),  # notes
-            mysql_quote(grant["location"]),  # affected_cities
+            mysql_quote(str(grant["locations"])),  # affected_cities
         ]) + ")")
         first = False
     if not first:

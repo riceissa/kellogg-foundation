@@ -4,7 +4,17 @@ import sys
 import glob
 from bs4 import BeautifulSoup
 
-import pdb
+
+def mysql_quote(x):
+    """Quote the string x using MySQL quoting rules. If x is the empty string,
+    return "NULL". Probably not safe against maliciously formed strings, but
+    our input is fixed and from a basically trustable source."""
+    if not x:
+        return "NULL"
+    x = x.replace("\\", "\\\\")
+    x = x.replace("'", "''")
+    x = x.replace("\n", "\\n")
+    return "'{}'".format(x)
 
 
 def page_number(filepath):
@@ -22,8 +32,7 @@ def main():
     for page in range(1, last_page + 1):
         with open(sys.argv[1] + f"/page-{page}.html", "r") as f:
             soup = BeautifulSoup(f, "lxml")
-            for grant in soup_to_grants(soup):
-                print(grant)
+            print_sql(soup_to_grants(soup))
 
 
 def soup_to_grants(soup):
@@ -52,6 +61,32 @@ def soup_to_grants(soup):
                 "amount": amount,
                 "location": location,
                 }
+
+
+def print_sql(grants_generator):
+    insert_stmt = """insert into donations (donor, donee, amount, donation_date, donation_date_precision, donation_date_basis, cause_area, url, donor_cause_area_url, notes, affected_cities) values"""
+    first = True
+    for grant in grants_generator:
+        if first:
+            print(insert_stmt)
+        print(("    " if first else "    ,") + "(" + ",".join([
+            mysql_quote("W. K. Kellogg Foundation"),  # donor
+            mysql_quote(grant["grantee"]),  # donee
+            str(grant["amount"]),  # amount
+            mysql_quote(grant["donation_date"]),  # donation_date
+            mysql_quote("day"),  # donation_date_precision
+            mysql_quote("donation log"),  # donation_date_basis
+            mysql_quote(""),  # cause_area
+            mysql_quote(grant["url"]),  # url
+            mysql_quote(""),  # donor_cause_area_url
+            mysql_quote("Purpose: " + grant["purpose"]),  # notes
+            mysql_quote(grant["location"]),  # affected_cities
+        ]) + ")")
+        first = False
+    if not first:
+        # If first is still true, that means we printed nothing above,
+        # so no need to print the semicolon
+        print(";")
 
 
 if __name__ == "__main__":

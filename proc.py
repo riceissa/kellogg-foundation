@@ -2,6 +2,7 @@
 
 import sys
 import glob
+import datetime
 from bs4 import BeautifulSoup
 
 
@@ -49,8 +50,15 @@ def soup_to_grants(soup):
         # We will split the date from the amount using the single occurrence of "$"
         assert date_amount.count("$") == 1
         dollar_loc = date_amount.index("$")
-        donation_date = date_amount[:dollar_loc].strip()
-        amount = date_amount[dollar_loc:].strip()
+        date_range = date_amount[:dollar_loc].strip()
+        start_date = date_range.split(" - ")[0]
+        # For some reason, the months appear both in the full form and in
+        # abbreviated form
+        try:
+            donation_date = datetime.datetime.strptime(start_date, "%b. %d, %Y")
+        except ValueError:
+            donation_date = datetime.datetime.strptime(start_date, "%B %d, %Y")
+        amount = date_amount[dollar_loc:].strip().replace("$", "").replace(",", "")
 
         location = result.find("div", {"class": "geo-focus"}).text.strip()
         yield {

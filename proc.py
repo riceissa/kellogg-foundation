@@ -55,8 +55,11 @@ def soup_to_grants(soup, page, last_page):
         assert date_amount.count("$") == 1
         dollar_loc = date_amount.index("$")
         date_range = date_amount[:dollar_loc].strip()
-        start_date = date_range.split(" - ")[0]
+        donation_date = ""
+        donation_date_precision = ""
+        grant_range = ""
         if date_range:
+            start_date, end_date = date_range.split(" - ")
             # For some reason, the months appear both in the full form and in
             # abbreviated form
             try:
@@ -65,9 +68,12 @@ def soup_to_grants(soup, page, last_page):
                 donation_date = datetime.datetime.strptime(start_date, "%B %d, %Y")
             donation_date = donation_date.strftime("%Y-%m-%d")
             donation_date_precision = "day"
-        else:
-            donation_date = ""
-            donation_date_precision = ""
+            try:
+                end_date_obj = datetime.datetime.strptime(end_date, "%b. %d, %Y")
+            except ValueError:
+                end_date_obj = datetime.datetime.strptime(end_date, "%B %d, %Y")
+            grant_range = donation_date + " to " + end_date_obj.strftime("%Y-%m-%d")
+
         amount = date_amount[dollar_loc:].strip().replace("$", "").replace(",", "")
 
         try:
@@ -81,6 +87,7 @@ def soup_to_grants(soup, page, last_page):
                 "purpose": purpose,
                 "donation_date": donation_date,
                 "donation_date_precision": donation_date_precision,
+                "grant_range": grant_range,
                 "amount": amount,
                 "location": location,
                 }
@@ -92,6 +99,9 @@ def print_sql(grants_generator):
     for grant in grants_generator:
         if first:
             print(insert_stmt)
+        notes = ["Purpose: " + grant["purpose"]]
+        if grant["grant_range"]:
+            notes.append("Grant period: " + grant["grant_range"])
         print(("    " if first else "    ,") + "(" + ",".join([
             mysql_quote("W. K. Kellogg Foundation"),  # donor
             mysql_quote(grant["grantee"]),  # donee
@@ -102,7 +112,7 @@ def print_sql(grants_generator):
             mysql_quote(""),  # cause_area
             mysql_quote(grant["url"]),  # url
             mysql_quote(""),  # donor_cause_area_url
-            mysql_quote("Purpose: " + grant["purpose"]),  # notes
+            mysql_quote("; ".join(notes)),  # notes
             mysql_quote(grant["location"]),  # affected_cities
         ]) + ")")
         first = False

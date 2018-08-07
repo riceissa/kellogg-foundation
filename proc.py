@@ -17,6 +17,14 @@ def get_affected_location_fields(locations):
         found = False
         for geo in geography.GEOGRAPHIES:
             if location in geo or location.endswith(" Wide") and location[:-len(" Wide")] in geo:
+                if geo.places_kind in ["state", "province", "department",
+                                       "region", "district", "county"]:
+                    affected_states.append(location)
+                    affected_countries.append(geo.name)
+                elif geo.places_kind in ["country"]:
+                    affected_countries.append(location)
+                else:
+                    print("We don't know this places_kind", file=sys.stderr)
                 found = True
                 break
         if found:
@@ -25,12 +33,12 @@ def get_affected_location_fields(locations):
             pass
         elif location == "DR Wide":
             # Dominican Republic, e.g. https://www.wkkf.org/grants/grant/2009/01/improving-and-consolidating-a-rural-development-experience-3010662
-            pass
+            affected_countries.append("Dominican Republic")
         elif location in geography.CITIES:
-            pass
+            affected_cities.append(location)
+            affected_countries.append(geography.CITIES[location])
         else:
-            print(location, file=sys.stderr)
-        found = False
+            print("We don't know this location", location, file=sys.stderr)
     return list(map(mysql_quote,
                     ["|".join(affected_countries), "|".join(affected_states),
                      "|".join(affected_cities), "|".join(affected_regions)]))

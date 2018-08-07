@@ -25,6 +25,7 @@ def get_location(locations):
             pass
         else:
             print(location, file=sys.stderr)
+        found = False
     return "blah"
 
 def mysql_quote(x):

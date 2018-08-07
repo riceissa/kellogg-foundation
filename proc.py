@@ -5,6 +5,7 @@ import glob
 import datetime
 from bs4 import BeautifulSoup
 import geography
+from collections import OrderedDict
 
 
 def get_affected_location_fields(locations):
@@ -14,6 +15,7 @@ def get_affected_location_fields(locations):
     affected_cities = []
     affected_regions = []
     for location in locations:
+        location = geography.normalize(location)
         found = False
         for geo in geography.GEOGRAPHIES:
             if location in geo or location.endswith(" Wide") and location[:-len(" Wide")] in geo:
@@ -22,7 +24,10 @@ def get_affected_location_fields(locations):
                     affected_states.append(location)
                     affected_countries.append(geo.name)
                 elif geo.places_kind in ["country"]:
-                    affected_countries.append(location)
+                    if location.endswith(" Wide"):
+                        affected_countries.append(location[:-len(" Wide")])
+                    else:
+                        affected_countries.append(location)
                 else:
                     print("We don't know this places_kind", file=sys.stderr)
                 found = True
@@ -39,6 +44,13 @@ def get_affected_location_fields(locations):
             affected_countries.append(geography.CITIES[location])
         else:
             print("We don't know this location", location, file=sys.stderr)
+
+    # Uniquify these lists
+    affected_countries = list(OrderedDict.fromkeys(affected_countries).keys())
+    affected_states = list(OrderedDict.fromkeys(affected_states).keys())
+    affected_cities = list(OrderedDict.fromkeys(affected_cities).keys())
+    affected_regions = list(OrderedDict.fromkeys(affected_regions).keys())
+
     return list(map(mysql_quote,
                     ["|".join(affected_countries), "|".join(affected_states),
                      "|".join(affected_cities), "|".join(affected_regions)]))

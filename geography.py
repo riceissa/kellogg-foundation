@@ -105,25 +105,33 @@ GEOGRAPHIES = [
             ["Buckinghamshire"],
             "county"),
         Geography(
-                "Zimbabwe",
-                ["Manicaland", "Harare"],
-                "province"),
+            "Zimbabwe",
+            ["Manicaland", "Harare"],
+            "province"),
         Geography(
-                "El Salvador",
-                ["Ahuachapán", "Cabañas", "Chalatenango", "Cuscatlán",
-                 "La Libertad", "La Paz", "La Unión", "Morazán",
-                 "San Miguel", "San Salvador", "San Vicente",
-                 "Santa Ana", "Sonsonate", "Usulután"],
-                "department"),
+            "El Salvador",
+            ["Ahuachapán", "Cabañas", "Chalatenango", "Cuscatlán",
+             "La Libertad", "La Paz", "La Unión", "Morazán",
+             "San Miguel", "San Salvador", "San Vicente",
+             "Santa Ana", "Sonsonate", "Usulután"],
+            "department"),
         Geography(
-                "Honduras",
-                ["Atlántida"],
-                "department"),
+            "Honduras",
+            ["Atlántida"],
+            "department"),
         Geography(
-                "Haiti",
-                ["Artibonite", "Centre", "Grand'Anse", "Nippes", "Nord",
-                 "Nord Est", "Nord Ouest", "Ouest", "Sud Est", "Sud"],
-                "department"),
+            "Haiti",
+            ["Artibonite", "Centre", "Grand'Anse", "Nippes", "Nord",
+             "Nord Est", "Nord Ouest", "Ouest", "Sud Est", "Sud"],
+            "department"),
+        Geography(
+            "Canada",
+            ["Ontario"],
+            "province"),
+        Geography(
+            "Nigeria",
+            ["Oyo"],
+            "state"),
         ]
 
 
@@ -134,4 +142,5 @@ CITIES = {
         "Paris": "France",
         "Zürich (de)": "Switzerland",
         "Maseru": "Lesotho",
+        "Adis Abeba": "Ethiopia",
         }

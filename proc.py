@@ -4,52 +4,14 @@ import sys
 import glob
 import datetime
 from bs4 import BeautifulSoup
+import geography
 
 
 def get_location(locations):
     for location in locations:
-        if location in US_STATES:
-            pass
-        elif location.endswith(" Wide") and location[:-len(" Wide")] in COUNTRIES:
-            pass
-        elif location in COUNTRIES:
-            pass
-        elif location in MEXICO_STATES:
-            pass
-        elif location in HAITI_DEPARTMENTS:
-            pass
-        elif location in FRANCE_DEPARTMENTS:
-            pass
-        elif location in SOUTH_AFRICA_PROVINCES:
-            pass
-        elif location in PERU_REGIONS:
-            pass
-        elif location in EL_SALVADOR_DEPARTMENTS:
-            pass
-        elif location in BRAZIL_STATES:
-            pass
-        elif location in COSTA_RICA_PROVINCES:
-            pass
-        elif location in ZIMBABWE_PROVINCES:
-            pass
-        elif location in HONDURAS_DEPARTMENTS:
-            pass
-        elif location in CHILE_REGIONS:
-            pass
-        elif location in INDIA_STATES:
-            pass
-        elif location in CHINA_PROVINCES:
-            pass
-        elif location in MOZAMBIQUE_PROVINCES:
-            pass
-        elif location in NEW_ZEALAND_REGIONS:
-            pass
-        elif location in UNITED_KINGDOM_COUNTIES:
-            pass
-        elif location in SWAZILAND_REGIONS:
-            pass
-        elif location in CITIES:
-            pass
+        for geo in geography.GEOGRAPHIES:
+            if location in geo or location.endswith(" Wide") and location[:-len(" Wide")] in geo:
+                pass
         elif location == "American Indian/Alaska Tribal Nation":
             pass
         elif location == "DR Wide":

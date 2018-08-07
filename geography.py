@@ -12,6 +12,12 @@ class Geography:
     def __len__(self):
         return len(self.places)
 
+
+def normalize(location):
+    return {"USA": "United States", "U.S.": "United States",
+            "USA Wide": "United States", "U.S. Wide": "United States"}.get(location, location)
+
+
 GEOGRAPHIES = [
         Geography(
             "United States",
@@ -28,7 +34,7 @@ GEOGRAPHIES = [
             "state"),
         Geography(
             "Countries",
-            ['USA', 'U.S.', 'Mexico', 'Haiti', 'Honduras', 'Virgin Islands', 'Grenada',
+            ['United States', 'Mexico', 'Haiti', 'Honduras', 'Virgin Islands', 'Grenada',
              'Puerto Rico', 'Brazil', 'Argentina', 'Zimbabwe', 'Guatemala',
              'Mozambique', 'Lesotho', 'South Africa', 'Botswana', 'Bolivia',
              'Peru', 'Swaziland', 'Chile', 'Colombia', 'Nicaragua', 'Ecuador',

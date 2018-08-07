@@ -61,7 +61,7 @@ GEOGRAPHIES = [
             "state"),
         Geography(
             "Peru",
-            ["La Libertad", "Puno"],
+            ["La Libertad", "Puno", "Lima"],
             "region"),
         Geography(
             "Chile",
@@ -82,7 +82,7 @@ GEOGRAPHIES = [
         Geography(
             "South Africa",
             ["Gauteng", "Western Cape", "Kwazulu-Natal", "Free State",
-             "Mpumalanga"],
+             "Mpumalanga", "Eastern Cape", "Limpopo"],
             "province"),
         Geography(
             "France",
@@ -106,7 +106,7 @@ GEOGRAPHIES = [
             "county"),
         Geography(
             "Zimbabwe",
-            ["Manicaland", "Harare"],
+            ["Manicaland", "Harare", "Matabeleland South"],
             "province"),
         Geography(
             "El Salvador",
@@ -117,7 +117,7 @@ GEOGRAPHIES = [
             "department"),
         Geography(
             "Honduras",
-            ["Atlántida"],
+            ["Atlántida", "Cortés"],
             "department"),
         Geography(
             "Haiti",
@@ -132,6 +132,22 @@ GEOGRAPHIES = [
             "Nigeria",
             ["Oyo"],
             "state"),
+        Geography(
+            "Bolivia",
+            ["Oruro"],
+            "department"),
+        Geography(
+            "Colombia",
+            ["Cundinamarca", "Valle del Cauca"],
+            "department"),
+        Geography(
+            "Malawi",
+            ["Dowa"],
+            "district"),
+        Geography(
+            "Argentina",
+            ["Córdoba"],
+            "province"),
         ]
 
 

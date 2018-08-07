@@ -7,7 +7,12 @@ from bs4 import BeautifulSoup
 import geography
 
 
-def get_location(locations):
+def get_affected_location_fields(locations):
+    """Use the list of locations to generate the affected_* fields."""
+    affected_countries = []
+    affected_states = []
+    affected_cities = []
+    affected_regions = []
     for location in locations:
         found = False
         for geo in geography.GEOGRAPHIES:
@@ -26,7 +31,9 @@ def get_location(locations):
         else:
             print(location, file=sys.stderr)
         found = False
-    return "blah"
+    return list(map(mysql_quote,
+                    ["|".join(affected_countries), "|".join(affected_states),
+                     "|".join(affected_cities), "|".join(affected_regions)]))
 
 def mysql_quote(x):
     """Quote the string x using MySQL quoting rules. If x is the empty string,
@@ -116,13 +123,12 @@ def soup_to_grants(soup, page, last_page):
 
 
 def print_sql(grants_generator):
-    insert_stmt = """insert into donations (donor, donee, amount, donation_date, donation_date_precision, donation_date_basis, cause_area, url, donor_cause_area_url, notes, affected_cities) values"""
+    insert_stmt = """insert into donations (donor, donee, amount, donation_date, donation_date_precision, donation_date_basis, cause_area, url, donor_cause_area_url, notes,  affected_countries, affected_states, affected_cities, affected_regions) values"""
     first = True
     for grant in grants_generator:
         if first:
             print(insert_stmt)
         notes = ["Purpose: " + grant["purpose"]]
-        get_location(grant["locations"])  # TODO remove later
         if grant["grant_range"]:
             notes.append("Grant period: " + grant["grant_range"])
         print(("    " if first else "    ,") + "(" + ",".join([
@@ -136,7 +142,7 @@ def print_sql(grants_generator):
             mysql_quote(grant["url"]),  # url
             mysql_quote(""),  # donor_cause_area_url
             mysql_quote("; ".join(notes)),  # notes
-            mysql_quote(str(grant["locations"])),  # affected_cities
+            *get_affected_location_fields(grant["locations"]),  # affected_countries, affected_states, affected_cities, affected_regions
         ]) + ")")
         first = False
     if not first:

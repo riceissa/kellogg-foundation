@@ -9,13 +9,19 @@ import geography
 
 def get_location(locations):
     for location in locations:
+        found = False
         for geo in geography.GEOGRAPHIES:
             if location in geo or location.endswith(" Wide") and location[:-len(" Wide")] in geo:
-                return "lol"
-        if location == "American Indian/Alaska Tribal Nation":
+                found = True
+                break
+        if found:
+            pass
+        elif location == "American Indian/Alaska Tribal Nation":
             pass
         elif location == "DR Wide":
             # Dominican Republic, e.g. https://www.wkkf.org/grants/grant/2009/01/improving-and-consolidating-a-rural-development-experience-3010662
+            pass
+        elif location in geography.CITIES:
             pass
         else:
             print(location, file=sys.stderr)

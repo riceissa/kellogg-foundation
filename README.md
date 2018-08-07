@@ -12,7 +12,9 @@ NOTE: before running `scrape.py`, go to https://www.wkkf.org/grants#pp=100
 in the URL after `p=`). Then modify the `LAST_PAGE` variable in `scrape.py`.
 
 `scrape.py` requires selenium and the chrome driver, so install that before
-running the script.
+running the script. Also, selenium isn't using the virtual display here so
+a chromium window will keep opening and closing as the script runs, so
+you won't be able to do much on the computer for a while.
 
 ```bash
 today=$(date -Idate)
